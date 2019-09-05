@@ -23,8 +23,7 @@ def ocr_core(filename):
     :param filename: image file path + name
     :return: extracted text from image file
     """
-    text = pytesseract.image_to_string(Image.open(filename))
-    return text
+    return pytesseract.image_to_string(Image.open(filename))
 
 
 def save_text_file(content, new_file_path):
