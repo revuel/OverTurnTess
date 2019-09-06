@@ -13,9 +13,6 @@ config.read('config.ini')
 raw_corpus_path = config['DEFAULT']['RawPath']
 training_corpus_path = config['DEFAULT']['TrainingPath']
 
-# Input image file list
-raw_corpus_file_list = os.listdir(raw_corpus_path)
-
 
 def ocr_core(filename):
     """
@@ -42,14 +39,46 @@ def save_text_file(content, new_file_path):
         logging.error(" Error {}".format(str(ex_io)))
 
 
-# Run
-for raw_file in raw_corpus_file_list:
+def check_paths():
+    """
+    Checks if config.ini provided paths exist
+    :return: Boolean
+    """
+    logging.info(" Checking if paths exist...")
 
-    logging.info(" Now processing {}".format(os.path.join(raw_corpus_path, raw_file)))
-    training_file_path = os.path.splitext(os.path.join(training_corpus_path, raw_file))[0] + '.txt'
+    if os.path.isdir(raw_corpus_path) and os.path.isdir(training_corpus_path):
+        logging.info(" Paths found in OS")
+        return True
+    else:
+        logging.info(" Wrong path! Please review config.ini file values")
+        return False
 
-    try:
-        text = ocr_core(os.path.join(raw_corpus_path, raw_file))
-        save_text_file(text, training_file_path)
-    except Exception as ex:
-        logging.error(" Error {}".format(str(ex)))
+
+def run():
+    """
+    Runs this script
+    :return: 0 if everything went fine, other number otherwise
+    """
+    if check_paths():
+
+        # Input image file list
+        raw_corpus_file_list = os.listdir(raw_corpus_path)
+
+        for raw_file in raw_corpus_file_list:
+
+            logging.info(" Now processing {}".format(os.path.join(raw_corpus_path, raw_file)))
+            training_file_path = os.path.splitext(os.path.join(training_corpus_path, raw_file))[0] + '.txt'
+
+            try:
+                text = ocr_core(os.path.join(raw_corpus_path, raw_file))
+                save_text_file(text, training_file_path)
+            except Exception as ex:
+                logging.error(" Error {}".format(str(ex)))
+
+        logging.info(" Everything went fine. See you!")
+    else:
+        exit(1)
+
+
+# -- RUN ---------------------------------------------------------------------------------------------------------------
+run()
