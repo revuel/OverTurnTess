@@ -1,5 +1,5 @@
 pip==19.2.3
-setuptools==41.2.0
+setuptools==65.5.1
 configparser==3.8.1
 Pillow==8.1.1
 pytesseract==0.3.0
